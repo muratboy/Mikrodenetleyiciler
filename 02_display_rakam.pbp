@@ -1,0 +1,38 @@
+TRISB=%00000000
+PortB=0
+i var byte
+sayi var byte [10]
+
+sayi[0]=%00111111
+sayi[1]=%00000110
+sayi[2]=%01011011
+sayi[3]=%01001111
+sayi[4]=%01100110
+sayi[5]=%01101101
+sayi[6]=%01111101
+sayi[7]=%00000111
+sayi[8]=%01111111
+sayi[9]=%01101111
+    
+label:
+    for i=0 to 9     
+        PortB=sayi[i]
+        pause 500
+    next i
+GOTO label
+    
+label_2:
+    while i<10
+		PortB = sayi[i]
+		pause 500
+		i=i+1
+    wend
+    i=0
+goto label_2:
+
+label_3:
+    PortB = sayi[i]
+    pause 500
+    i=i+1
+    if i>9 then i=0
+goto label_3     
