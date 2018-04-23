@@ -1,0 +1,20 @@
+TRISB=0:TRISC=0
+i var byte [8]:j var byte:d var byte
+i[0]=%00000000
+i[1]=%01100110
+i[2]=%10011001
+i[3]=%01100110
+i[4]=%00000000
+i[5]=%10000001
+i[6]=%01000010
+i[7]=%00111100
+label:
+d=1
+    for j=0 to 7
+            portb=~d
+            portc=i[7-j]
+            pause 5
+            d=d<<1
+    next j
+
+goto label

@@ -1,0 +1,22 @@
+TRISB=%00000000
+i var byte
+portB=~1
+pause 50
+i=1
+tabel:
+    i=i<<1
+    portB=~i
+    pause 50
+    if i=128 then
+        GOTO tabel_2
+    endif
+goto tabel
+tabel_2:
+    i=i>>1
+    portB=~i
+    pause 50
+    if i=1 then
+        goto tabel
+    endif
+goto tabel_2
+

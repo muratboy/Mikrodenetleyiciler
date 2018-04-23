@@ -1,0 +1,24 @@
+TRISB=%00000000
+TRISD=%00000000
+i var byte:x var byte:k var byte
+write 0,9	'registerlara veri yazma write $adres,veri
+write 1,8
+write 2,7
+write 3,6
+write 4,5
+write 5,4
+write 6,16
+write 7,17
+write 8,28
+write 9,39
+label:
+    i=0
+    while i<10:
+        read i,x	'registerdan veri okuma read $adres,veri
+		k=x dig 1
+		portd=x+k*6
+		portB=i
+		i=i+1
+		pause 500
+    wend
+goto label

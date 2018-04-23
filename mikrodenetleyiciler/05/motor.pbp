@@ -1,0 +1,49 @@
+TRISB=%00000000
+TRISD=%00000000
+TRISA.0=1
+TRISA.1=1
+TRISA.2=1
+DEFINE LCD_DREG PORTD
+DEFINE LCD_DBIT 0
+DEFINE LCD_RSREG PORTE
+DEFINE LCD_RSBIT 0
+DEFINE LCD_EREG PORTE
+DEFINE LCD_EBIT 2
+DEFINE LCD_BITS 8
+ADCON1=7
+PAUSE 100
+i var byte
+portb=0
+symbol ileri = porta.0
+symbol geri = porta.1
+symbol dur = porta.2
+Lcdout $fe,$40,6,4,4,4,4,4,12
+Lcdout $fe,$48,6,8,8,4,4,2,6
+Lcdout $fe,$50,0,0,16,31,1,0,0
+Lcdout $fe,$58,12,4,4,4,4,4,6
+Lcdout $fe,$60,6,2,4,4,8,8,6
+Lcdout $fe,$68,0,0,1,31,16,0,0
+
+label:
+    if ileri = 0 then portb=1
+    if geri=0 then portb=2
+    if dur=0 then portb=0    
+    lcdout $fe,1
+    lcdout "M","o","t","o","r"," ",":"," "
+    if portb=2 then
+        for i=0 to 2
+            lcdout $fe,$88,i
+            pause 100
+        next i
+        lcdout $fe,$c0,"g"
+        lcdout "e","r","i"," ","d","o","n","u","y","o","r"
+    endif
+    if portb=1 then
+        for i=3 to 5
+            lcdout $fe,$88,i
+            pause 100
+        next i
+        lcdout $fe,$c0,"i","l","e","r","i"," ","d","o","n","u","y","o","r"
+    endif
+    pause 1000
+goto label

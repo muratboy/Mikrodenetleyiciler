@@ -1,0 +1,99 @@
+TRISD=0
+include "lcdout.pbp"
+define HSER_RCSTA 90h
+define HSER_TXSTA 24h
+define HSER_BAUD 9600
+define HSER_CLROERR 1
+i var word:j var word
+Lcdout $fe,$40,31,17,17,17,17,17,31   'kagit
+Lcdout $fe,$48,17,10,4,10,10,17,17    'makas
+Lcdout $fe,$50,0,14,31,31,31,14,0     'tas
+i=0:j=0
+label:
+    gosub secim
+    if j!=0 then
+        lcdout $fe,1
+        select case  i
+            case "k"
+                select case j
+                    case "k"
+                        hserout ["berabere ",13,10]
+                        lcdout "berabere"
+                        gosub bas
+                    case "m"
+                        hserout ["2. oyuncu kazandi ",13,10]
+                        lcdout 0,1," 2. oyuncu kazandi"
+                        lcdout $fe,$c0,"makas kagidi keser"
+                        gosub bas
+                    case "t"
+                        hserout ["1. oyuncu kazandi ",13,10]
+                        lcdout 0,2," 1. oyuncu kazandi"
+                        lcdout $fe,$c0,"kagid tasi sarar"
+                        gosub bas
+                end select
+            case "m"
+                select case j
+                    case "k"
+                        hserout ["1. oyuncu kazandi ",13,10]
+                        lcdout $fe,1,1,0," 1. oyuncu kazandi"
+                        lcdout $fe,$c0,"makas kagidi keser"
+                        gosub bas
+                    case "m"
+                        hserout ["berabere ",13,10]
+                        lcdout "berabere"
+                        gosub bas
+                    case "t"
+                        hserout ["2. oyuncu kazandi ",13,10]
+                        lcdout 1,2," 2. oyuncu kazandi"
+                        lcdout $fe,$c0,"tas makasi kirar"
+                        gosub bas
+                end select
+            case "t"
+                select case j
+                    case "k"
+                        hserout ["2. oyuncu kazandi ",13,10]
+                        lcdout 2,0," 2. oyuncu kazandi"
+                        lcdout $fe,$c0,"kagid tasi sarar"
+                        gosub bas
+                    case "m"
+                        hserout ["1. oyuncu kazandi ",13,10]
+                        lcdout 2,1," 1. oyuncu kazandi"
+                        lcdout $fe,$c0,"tas makasi kirar"
+                        gosub bas
+                    case "t"
+                        hserout ["berabere ",13,10]
+                        lcdout "berabere"
+                        gosub bas
+                end select
+        end select
+    endif
+    pause 200
+goto label
+secim:
+    hserout ["TAS=t MAKAS=m KAGIT=k ",13,10]    
+    if i=0 then 
+        hserout ["birinci oyuncu hamlesini girsin: ",13,10]
+    endif
+    if i=0 then 
+        hserin [i]
+        while not (i="k" or i="m" or i="t")
+            hserout ["dogru hamle girin ",13,10]
+            hserin [i]
+        wend
+    endif
+    if j=0 then 
+        hserout ["ikinci oyuncu hamlesini girsin: ",13,10]
+    endif
+    if j=0 then 
+        hserin [j]
+        while not (j="k" or j="m" or j="t")
+            hserout ["dogru hamle girin ",13,10]
+            hserin [j]
+        wend
+    endif
+return
+bas:
+hserout ["bir daha oynamak icin space'e basin: ",13,10]
+hserin [wait(" "),i]
+i=0:j=0
+return

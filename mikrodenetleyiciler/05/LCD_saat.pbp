@@ -1,0 +1,59 @@
+TRISD=%00000000
+TRISA.0=1
+TRISA.1=1
+DEFINE LCD_DREG PORTD
+DEFINE LCD_DBIT 0
+DEFINE LCD_RSREG PORTE
+DEFINE LCD_RSBIT 0
+DEFINE LCD_EREG PORTE
+DEFINE LCD_EBIT 2
+DEFINE LCD_BITS 8
+ADCON1=7
+PAUSE 100
+
+saat var byte : dakika var byte : saniye var BYte
+     
+label:
+FOR saat=0 to 23
+    for dakika=0 to 59
+        for saniye=0 to 59
+            pause 1000
+            lcdout $fe,1
+            if saat<10 then 
+                lcdout $fe,$80,#0
+                lcdout $fe,$81,#saat
+            else 
+                lcdout $fe,$80,#saat
+            endif
+            lcdout $fe,$82,":"
+            if dakika<10 then
+                lcdout $fe,$83,#0
+                lcdout $fe,$84,#dakika
+            else
+                lcdout $fe,$83,#dakika
+            endif
+                lcdout $fe,$85,":"
+            if saniye<10 then
+                lcdout $fe,$86,#0
+                lcdout $fe,$87,#saniye
+            else
+                lcdout $fe,$86,#saniye
+            endif
+            if porta.0=0 then 
+                if saat=23 then
+                    saat=0
+                else
+                    saat=saat+1
+                endif
+            endif
+            if porta.1=0 then
+                if dakika=59 then
+                    dakika=0
+                else
+                    dakika=dakika+1
+                endif
+            endif
+        next saniye
+    next dakika
+next saat
+goto label

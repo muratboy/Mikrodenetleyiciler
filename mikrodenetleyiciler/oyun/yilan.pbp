@@ -1,0 +1,88 @@
+TRISB=0:TRISD=0:TRISA.0=1:TRISA.1=1:ADCON1=7
+d var byte [8]:yilanx var byte [21]:yilany var byte [21]
+d[0]=1:d[1]=2:d[2]=4:d[3]=8:d[4]=16:d[5]=32:d[6]=64:d[7]=128
+xek var byte:yek var byte:boy var byte:yemx var byte:yemy var byte
+i var byte:j var byte:k var byte:m var byte:fek var byte:pek var byte
+symbol sol=porta.0:symbol sag=porta.1:symbol x=portd:x=0:symbol y=portb:y=0
+
+baslangic:
+fek=14:pek=10
+gosub yembelirle:xek=1:yek=0:boy=18
+for i=0 to 20
+    yilanx[i]=0
+    yilany[i]=0
+next i
+
+yilanx[20]=2:yilany[20]=4:yilanx[19]=1:yilany[19]=4:yilanx[18]=0:yilany[18]=4
+
+label:
+    j=0:i=0
+    gosub dugme
+    for m=0 to fek
+        gosub goster
+    next m
+    for k=boy to 19
+        yilanx[k]=yilanx[k+1]
+        yilany[k]=yilany[k+1]
+    next k
+    yilanx[20]=yilanx[20]+xek
+    yilany[20]=yilany[20]+yek
+    if yemx=yilanx[20] and yemy=yilany[20] then 
+        boy=boy-1
+        fek=fek+1
+        pek=pek-1
+        gosub yembelirle
+    endif
+    if yilanx[20]>7 or yilanx[20]<0 or yilany[20]>7 or yilany[20]<0 then
+        yilanx[20]=yilanx[20]-xek
+        yilany[20]=yilany[20]-yek
+        goto gameover
+    endif
+goto label
+
+gameover:
+for i=0 to 2
+    x=0:y=255
+    pause 150
+    for m=0 to 8 
+        gosub goster
+    next m    
+next i
+goto baslangic
+
+goster:
+    x=d[yemx]
+    y=~d[yemy]
+    pause pek
+    for k=boy to 20
+            y=~d[yilany[k]]
+            x=d[yilanx[k]]
+            pause pek
+    next k
+return
+
+dugme:
+if sag=1 then
+    if xek=0 then
+        xek=yek:yek=0
+    else
+        yek=-xek:xek=0
+    endif     
+endif
+if sol=1 then
+    if xek=0 then
+        xek=-yek:yek=0
+    else
+        yek=xek:xek=0
+    endif 
+endif
+return
+
+yembelirle:
+    random yemx:yemx=yemx//8
+    random yemy:yemy=yemy//8
+    for k=0 to 20
+       if yemx=yilanx[k] and yemy=yilany[k] then goto yembelirle
+    next k    
+return
+

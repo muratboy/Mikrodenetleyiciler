@@ -1,0 +1,43 @@
+TRISD=0
+include "hserlcdout.pbp"
+i var byte:j var byte:d var byte[5]:bayrak var byte:tahmin var byte
+adam var byte:bulundu var byte
+Lcdout $fe,$40,14,14,0,0,0,0,0  
+Lcdout $fe,$48,14,14,4,4,4,0,0   
+Lcdout $fe,$50,14,14,4,28,4,0,0
+Lcdout $fe,$58,14,14,4,31,4,0,0
+Lcdout $fe,$60,14,14,4,31,4,8,16
+Lcdout $fe,$68,14,14,4,31,4,10,17  
+label:
+    lcdout $fe,1
+    adam=0
+    bulundu=0
+    hserout ["1. oyuncu kelimeyi girsin: ",13,10]
+    for i=0 to 4
+        hserin [d[i]]
+        hserout ["*"]
+    next i
+    hserout [": kelime girildi",13,10]
+    hserout ["2. oyuncu tahminleri girsin: "]
+    while adam<6 and bulundu<5
+        bayrak=0
+        hserin [tahmin]
+        hserout [tahmin]
+        for j=0 to 4
+            if d[j]=tahmin then
+                lcdout $fe,128+j,tahmin
+                bulundu = bulundu +1 
+                bayrak=1
+            endif
+        next j
+        if bayrak=0 then
+            adam=adam+1
+            lcdout $fe,136,adam-1
+        endif 
+    wend
+    if bulundu=5 then LCDOUT $fe,$c0,"kazandiniz"
+    if adam=6 then
+        LCDOUT $fe,$c0,"kaybettiniz"
+    endif    
+    pause 1000*2
+goto label

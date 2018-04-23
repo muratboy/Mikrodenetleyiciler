@@ -1,0 +1,93 @@
+TRISB=%11000000:TRISC=0
+portb=3
+include "lcdout.pbp"
+bekle con 100
+b var byte[4]:b[0]=9:b[1]=12:b[2]=6:b[3]=3 'tam adim icin dizi
+d var byte[8]:d[0]=1:d[1]=3:d[2]=2:d[3]=6:d[4]=4:d[5]=12:d[6]=8:d[7]=9  'yarim adim icin dizi
+i var byte:j var byte:j=1:portc=0 :k var byte:k=0
+Lcdout $fe,$40,0,14,21,31,21,14,0
+
+'motor adim derecesi 45 derece olarak ayarlanmali
+label:
+while portb.6=1
+    for i=0 to 3
+        portb=b[i]
+        portc=j
+        if j=128 then 
+            j=1
+        else
+            j=j<<1
+        endif
+        if k=19 then
+            k=0
+        else
+            k=k+1
+        endif
+        lcdout $fe,1
+        lcdout $fe,128+k,0
+        pause bekle
+    next i
+wend
+while portb.7=1 
+    for i=0 to 3
+        portb=b[3-i]
+        portc=j
+        if j=1 then 
+            j=128
+        else
+            j=j>>1
+        endif
+        if k=0 then
+            k=19
+        else
+            k=k-1
+        endif
+        lcdout $fe,1
+        lcdout $fe,128+k,0
+        pause bekle
+    next i
+wend
+goto label
+
+'step motor yarim adim ile yapilmistir --motor 90 dereceye ayarlanmali
+label2:
+while portb.6=1
+    for i=0 to 7
+        portb=d[i]
+        portc=j
+        if j=128 then 
+            j=1
+        else
+            j=j<<1
+        endif
+        if k=19 then
+            k=0
+        else
+            k=k+1
+        endif
+        lcdout $fe,1
+        lcdout $fe,128+k,0
+        pause bekle
+    next i
+wend
+while portb.7=1 
+    for i=0 to 7
+        portb=d[7-i]
+        portc=j
+        if j=1 then 
+            j=128
+        else
+            j=j>>1
+        endif
+        if k=0 then
+            k=19
+        else
+            k=k-1
+        endif
+        lcdout $fe,1
+        lcdout $fe,128+k,0
+        pause bekle
+    next i
+wend
+goto label2
+ 

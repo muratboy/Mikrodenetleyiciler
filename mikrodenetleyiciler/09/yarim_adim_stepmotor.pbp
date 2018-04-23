@@ -1,0 +1,13 @@
+TRISB=0:TRISC=3
+include "lcdout.pbp"
+
+portb=1
+b var byte[8]:i var byte
+b[0]=1:b[1]=3:b[2]=2:b[3]=6:b[4]=4:b[5]=12:b[6]=8:b[7]=9
+bekle con 50
+label:
+    for i=0 to 7
+        portb=b[i]
+        pause bekle
+    next i
+goto label

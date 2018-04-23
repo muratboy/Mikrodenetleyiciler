@@ -1,0 +1,90 @@
+'include"lcd.pbp"
+TRISB=$F0:TRISD=0:TRISE.0=1:TRISE.2=1
+DEFINE LCD_DREG PORTD
+DEFINE LCD_DBIT 0
+DEFINE LCD_RSREG PORTE
+DEFINE LCD_RSBIT 0
+DEFINE LCD_EREG PORTE
+DEFINE LCD_EBIT 2
+DEFINE LCD_BITS 8
+ADCON1=7
+PAUSE 100 
+dizi var byte [16]:kar var byte [6]
+dizi[0]=40:dizi[1]=20:dizi[2]=36:dizi[3]=68:dizi[4]=18:dizi[5]=34:dizi[6]=66
+dizi[7]=17:dizi[8]=33:dizi[9]=65:dizi[10]=136:dizi[11]=132:dizi[12]=130
+dizi[13]=129:dizi[14]=24:dizi[15]=72
+kar[0]="+":kar[1]="-":kar[2]="*":kar[3]="/":kar[4]="c":kar[5]="="
+x var byte : y var byte : s var byte : t var byte:k var byte:i var byte:j var byte
+m var byte:hesap var byte:lcdout $fe,1
+bas:
+x=0 : y=0 : s=0 : t=0 : m=0: hesap=0 
+label:
+    portb=8
+    for i=0 to 3 
+        pause 10
+        for j=0 to 15
+            if j<10 then
+                if dizi[j]==portb then
+                    if x=0 then
+                        x=j
+                    else
+                        y=j
+                    endif
+                    if hesap=0 then
+                        lcdout $fe,1
+                        Lcdout $fe,$80,#x
+                    else
+                        lcdout $fe,1
+                        Lcdout $fe,$80,#x,hesap,#y
+                    endif
+                endif
+            else
+                if j<14 then
+                    if dizi[j]==portb then
+                        k=j-10:hesap=kar[k]
+                        lcdout $fe,1
+                        Lcdout $fe,$80,#x,hesap
+                    endif
+                else
+                    if dizi[j]==portb then
+                        k=j-10:t=kar[k]:goto islem
+                    endif
+                endif
+            endif
+        next j 
+        portb=portb>>1
+    next i
+goto label
+islem:
+    if t="=" then
+      select case hesap
+        case "+" : m=x+y
+        case "-" 
+            if x>y then
+                m=x-y
+            else
+                m=y-x
+                lcdout $fe,1
+                Lcdout $fe,$80,#x,hesap,#y,"=","-",#m
+                goto label
+            endif 
+        case "/" 
+            if y!=0 then 
+                m=x/y
+            else
+                goto error
+            endif
+        case "*" : m=x*y
+      end select
+      lcdout $fe,1
+      Lcdout $fe,$80,#x,hesap,#y,"=",#m
+      goto label
+    else
+        lcdout $fe,1
+        lcdout $fe,$80,#0
+    endif
+goto bas
+error:
+      lcdout $fe,1
+      Lcdout $fe,$80,"ERROR"
+goto label

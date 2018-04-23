@@ -1,0 +1,44 @@
+TRISB=%00000000
+TRISC=%00000000
+TRISD=%00000000
+ADCON1=7
+i var byte
+j var byte
+k var word
+i=0
+j=0
+portB=i
+portC=j
+portD=i+j
+label:
+    if portE.0=0 then
+        if i!=9 then 
+            i=i+1
+        else 
+            i=0
+        endif
+        while portE.0=0
+            portB =i
+        wend
+    endif
+    if portE.1=0 then
+        if j!=9 then 
+            j=j+1
+        else 
+            j=0
+        endif
+        while portE.1=0
+            portC =j
+        wend
+    endif
+    if portE.2=0 then
+            k=i+j
+            if k<10 then 
+                portD=k
+            else
+				k= k dig 1
+				portD=k*16+i+j-10
+            endif
+    endif    
+goto label
+

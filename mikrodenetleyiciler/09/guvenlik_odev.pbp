@@ -1,0 +1,71 @@
+TRISB=$70:TRISD=0:TRISC=0
+include "lcdout.pbp"
+symbol b = portb:symbol c=portc:symbol d=portd
+b=0:c=0
+x var byte:i var byte:j var byte:o var byte
+s var byte[6]:s[0]=1:s[1]=2:s[2]=3:s[3]="*":s[4]=5:s[5]="#"
+j=2
+
+bas:
+i=0:x="$":o=1
+lcdout $fe,1
+label: 
+    b.0=1 : pause 15
+    if b.4=1 then x=1
+    if b.5=1 then x=2
+    if b.6=1 then x=3
+    gosub kontrol
+    b.0=0 : b.1=1 : pause 15
+    if b.4=1 then x=4
+    if b.5=1 then x=5
+    if b.6=1 then x=6
+    gosub kontrol
+    b.1=0 : b.2=1 : pause 15
+    if b.4=1 then x=7
+    if b.5=1 then x=8
+    if b.6=1 then x=9
+    gosub kontrol
+    b.2=0 : b.3=1 : pause 15
+    if b.4=1 then x="*"
+    if b.5=1 then x=0
+    if b.6=1 then x="#"
+    gosub kontrol: b.3=0
+goto label
+kontrol:
+    if x!="$" then
+        if x="*" or x="#" then
+            lcdout x
+        else
+            lcdout #x
+        endif
+        if x!=s[i] then
+            o=0
+        endif
+        i=i+1
+        x="$"
+    endif
+    if i=6 then
+        if o=1 then
+            lcdout $fe,1,"giris basarili"
+            c=2
+            pause 1000*60*3
+        else
+            if j>0 then
+                j=j-1
+                c=1
+                lcdout $fe,1,#(j+1),"denemen kaldi"
+                pause 500
+                goto bas
+            else
+                lcdout $fe,1,"3 dk giremezsiniz"
+                j=3
+                gosub bekle
+                goto bas
+            endif
+        endif
+    endif
+return
+bekle:
+pause 1000*60*3
+return
+ 

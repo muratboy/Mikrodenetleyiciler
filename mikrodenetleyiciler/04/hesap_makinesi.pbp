@@ -1,0 +1,91 @@
+TRISB=%11110000
+TRISD=%00000000
+x var byte : y var byte : s var byte : t var byte:k var byte
+x=0 : y=0 : s=0 : t=0 : portd=0
+label: 
+    portb.0=1 : pause 10 : gosub kontrol
+    portb.0=0 : portb.1=1 : pause 10 : gosub kontrol
+    portb.1=0 : portb.2=1 : pause 10 : gosub kontrol
+    portb.2=0 : portb.3=1 : pause 10 : gosub kontrol : portb.3=0
+goto label
+kontrol:
+    select case portb
+        case %00010001
+            if s=0 then
+                write 0,7:s=1
+                read 0,portd
+            else
+                write 1,7:s=0
+                read 1,portd
+            endif
+        case %00100001
+            if s=0 then
+                write 0,8 : s=1 :read 0,portd
+            else
+                write 1,y : s=0 :read 1,portd
+            endif
+        case %01000001
+            if s=0 then
+                write 0,9 : s=1 :read 0,portd
+            else
+                write 1,9 : s=0 :read 1,portd
+            endif
+        case %10000001 : t="/"
+        case %00010010
+            if s=0 then
+                write 0,4 : s=1 :read 0,portd
+            else
+                write 1,4 : s=0 :Read 1,portd
+            endif
+        case %00100010
+            if s=0 then
+                write 0,5 : s=1 :read 0,portd
+            else
+                write 1,5 : s=0 :read 1,portd
+            endif
+        case %01000010
+            if s=0 then
+                write 0,6 : s=1 :read 0,portd
+            else
+                write 1,6 : s=0 :read 1,portd
+            endif
+        case %10000010 : t="*"
+        case %00010100
+            if s=0 then
+                write 0,1 : s=1 :read 0,portd
+            else
+                write 1,1 : s=0 :read 1,portd
+            endif
+        case %00100100
+            if s=0 then
+                write 0,2 : s=1 :read 0,portd
+            else
+                write 1,2 : s=0 :read 1,portd
+            endif
+        case %01000100
+            if s=0 then
+                write 0,3 : s=1 :read 0,portd
+            else
+                write 1,3 : s=0 :read 1,portd
+            endif
+        case %10000100 : t="-"
+        case %00011000 : t="c" :x=0 : y=0 : s=0 :portd=0
+        case %00101000
+            if s=0 then
+                write 0,0 : s=1 :read 0,portd
+            else
+                write 1,0 : s=0 :read 1,portd
+            endif
+        case %01001000 : gosub islem
+        case %10001000 : t="+"
+     end select   
+return
+islem:
+read 0,x:read 1,y
+      select case t
+        case "+" : k=(x+y) DIG 1: portD=x+y+k*6
+        case "-" : portD=x-y 
+        case "/" : portD=x/y
+        case "*" : k=(x*y) DIG 1: portD=x*y+k*6
+      end select
+return

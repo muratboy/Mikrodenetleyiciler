@@ -1,0 +1,57 @@
+TRISB=0:TRISC=3
+portb=3
+include "lcdout.pbp"
+bekle con 50:k var word:derece var word:n var word:x var word:x=0
+d var byte[4]:i var byte:d[0]=3:d[1]=6:d[2]=14:d[3]=9 :k=0:derece=0:n=0
+
+label:
+    x=0
+while portc.0=1
+    for i=0 to 3
+        if derece<360 then derece=derece+90    
+        if derece=360 then k=k+1:derece=0:x=x+1
+        lcdout $fe,1,"ileri: ",#x," tur"
+        if k>=n then
+            lcdout $fe,$c0,"toplamda: ",#(k-n)," tur"
+        else
+            lcdout $fe,$c0,"toplamda: -",#(n-k)," tur"
+        endif        
+        portb=d[i]
+        pause bekle
+    next i
+wend
+while portc.1=1 
+    for i=0 to 3
+        if derece<360 then derece=derece+90    
+        if derece=360 then n=n+1:derece=0:x=x+1
+        if x=0 then
+            lcdout $fe,1,"geri: ",#x," tur"
+        else
+            lcdout $fe,1,"geri: -",#x," tur"
+        endif
+        if k>=n then
+            lcdout $fe,$c0,"toplamda: ",#(k-n)," tur"
+        else
+            lcdout $fe,$c0,"toplamda: -",#(n-k)," tur"
+        endif
+        portb=d[3-i]
+        pause bekle
+    next i
+wend
+goto label
+
+'----------------------------------------------------
+'dizisiz step motor adimlari
+ileri2:
+    if portc.1=1 then goto geri2
+    pause bekle
+    portb=portb<<1
+    if portb=24 then portb=9:pause bekle:portb=3
+goto ileri2
+geri2:
+    if portc.0=1 then goto ileri2
+    pause bekle
+    portb=portb>>1
+    if portb=1 then portb=9
+    if portb=4 then portb=12:pause bekle
+goto geri2   

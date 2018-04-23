@@ -1,0 +1,47 @@
+TRISB=0:TRISD=0
+include "lcdout.pbp"
+define HSER_RCSTA 90h
+define HSER_TXSTA 24h
+define HSER_BAUD 9600
+define HSER_CLROERR 1
+i var byte:j var word:k var word:i=0:portb=0
+b var byte[8]:b[0]=9:b[1]=12:b[2]=6:b[3]=3
+seri:
+    select case j
+        case "w" 
+            for i=0 to 3
+                portb=b[i]+b[3-i]*16:pause 50
+            next i
+        case "a"
+            for i=0 to 3
+                portb=b[3-i]+b[3-i]*16:pause 50
+            next i
+        case "d"
+            for i=0 to 3
+                portb=b[i]+b[i]*16:pause 50
+            next i
+        case "s"
+            for i=0 to 3
+                portb=b[3-i]+b[i]*16:pause 50
+            next i
+    end select
+    gosub oku
+    gosub yaz
+goto seri
+oku:
+    hserin 50,asd,[j]
+    asd:
+    lcdout $fe,1,"duruyor"
+    if j="w" then lcdout $fe,1,"ileri gidiyor":pause 50
+    if j="a" then lcdout $fe,1,"sola gidiyor":pause 50
+    if j="d" then lcdout $fe,1,"saga gidiyor":pause 50
+    if j="s" then lcdout $fe,1,"geri gidiyor":pause 50
+    pause 200
+return
+yaz:
+    i=i+1
+    if j="w" then hserout ["ileri gidiyor",13,10]
+    if j="a" then hserout ["sola gidiyor",13,10]
+    if j="d" then hserout ["saga gidiyor",13,10]
+    if j="s" then hserout ["geri gidiyor",13,10]
+return

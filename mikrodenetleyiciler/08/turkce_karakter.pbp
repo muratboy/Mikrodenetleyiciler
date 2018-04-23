@@ -1,0 +1,15 @@
+TRISD=%00000000
+TRISA.0=1
+TRISA.1=1
+include "lcdout.pbp"
+Lcdout $fe,$40,14,17,16,16,17,14,4
+Lcdout $fe,$48,10,0,14,17,17,17,14
+Lcdout $fe,$50,10,0,17,17,17,17,14
+Lcdout $fe,$58,14,17,16,14,1,30,4
+'$40,$48,$50,$58,$60,$68,$70,$78
+label:
+    lcdout $fe,1
+    lcdout 0,1,"L"
+    lcdout $fe,$c0,"G",2,"N","E",3,"i"
+    pause 100
+goto label

@@ -1,0 +1,8 @@
+TRISB=%00000000
+i var byte
+label:
+    for i=0 to 9
+        PortB=i
+        pause 500
+    next i
+goto label
