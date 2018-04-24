@@ -1,17 +1,21 @@
 TRISB=%00000000
-TRISC=%10100000
+TRISC=%10100000     'portc.5 ve portc.7 input olarak ayarla
 
 SYMBOL yesilled=portB.0
 SYMBOL sariled=portB.1
 SYMBOL yesilbuton=portC.5
 SYMBOL saributon=portC.7
+
 yesilled=0 : sariled=0
+
 label:
+
     while yesilbuton=0
-        yesilled=1
+        yesilled=1          'yesil butonu basili oldugu surece yesil led yansin
     wend
     while saributon=1
-        sariled=1
+        sariled=1           'sari butonu basili oldugu surece sari led yansin
     wend
-    yesilled=0 : sariled=0    
+    yesilled=0 : sariled=0      
+
 GOTO label
