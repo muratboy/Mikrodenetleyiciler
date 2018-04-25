@@ -1,0 +1,66 @@
+DEFINE LOADER_USED 1
+TRISA=0:TRISB=0
+ADCON1=7
+portb=0
+
+sayi var byte [10]
+sayi[0]=%00111111:sayi[1]=%00000110
+sayi[2]=%01011011:sayi[3]=%01001111
+sayi[4]=%01100110:sayi[5]=%01101101
+sayi[6]=%01111101:sayi[7]=%00000111
+sayi[8]=%01111111:sayi[9]=%01101111
+
+i var byte:j var byte:i=0:j="$"
+m var byte:n var byte:m=0:n=0
+t var byte
+
+label:
+    TRISB=15:porta=0
+    pause 5:portb.4=1
+        if portb.3=1 then i=1
+        if portb.2=1 then i=2
+        if portb.1=1 then i=3
+        if portb.0=1 then j="+"
+    pause 5:portb.4=0:portb.5=1
+        if portb.3=1 then i=4    
+        if portb.2=1 then i=5        
+        if portb.1=1 then i=6        
+        if portb.0=1 then j="-"        
+    pause 5:portb.5=0:portb.6=1
+        if portb.3=1 then i=7
+        if portb.2=1 then i=8
+        if portb.1=1 then i=9
+        if portb.0=1 then j="*"
+    pause 5:portb.6=0:portb.7=1
+        if portb.3=1 then i=0
+        if portb.2=1 then gosub sifirla
+        if portb.1=1 then gosub islem
+        if portb.0=1 then j="/"
+    pause 5:portb.7=0
+        if j="$" then
+            m=i
+        else
+            n=i
+        endif 
+    gosub goster
+goto label
+
+goster:
+    TRISB=0
+    for t=0 to 16
+        portb=sayi[i dig 0]:porta=1:pause 10
+        portb=sayi[i dig 1]:porta=2:pause 10
+    next t
+return
+
+islem:
+    if j="+" then i=m+n
+    if j="-" then i=m-n
+    if j="*" then i=m*n
+    if j="/" then i=m/n
+    J="$"
+return
+
+sifirla:
+    m=0:n=0:i=0:j="$"
+return

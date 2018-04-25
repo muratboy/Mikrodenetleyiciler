@@ -1,0 +1,34 @@
+DEFINE LOADER_USED 1
+define HSER_RCSTA 90h
+define HSER_TXSTA 24h
+define HSER_BAUD 9600
+define HSER_CLROERR 1
+
+TRISA=0:TRISB=0
+ADCON1=7
+porta=1:portb=1
+
+x var byte
+
+label:
+
+    pause 500
+    hserin [x]
+
+    select case x
+        case "a"
+            if portb=128 then 
+                portb=1
+            else 
+                portb=portb<<1
+            endif 
+        case "d"
+            if portb=1 then 
+                portb=128
+            else 
+                portb=portb>>1
+            endif  
+    end select
+
+goto label
+

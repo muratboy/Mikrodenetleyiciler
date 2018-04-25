@@ -1,0 +1,59 @@
+DEFINE LOADER_USED 1
+define HSER_RCSTA 90H
+define HSER_TXSTA 24H
+define HSER_BAUD 9600
+define HSER_CLROERR 1
+define LCD_DREG PORTD
+define LCD_DBIT 0
+define LCD_RSREG PORTE
+define LCD_RSBIT 0
+define LCD_EREG PORTE
+define LCD_EBIT 2
+define LCD_BITS 8
+ADCON1=7
+
+TRISB=%01000000:TRISD=0:TRISE=%000:TRISA=0:TRISC=%00000010
+
+PortE.1=0:PortA =0
+pause 100
+
+Lcdout $fe,$40,1,3,7,31,16,23,7,7
+Lcdout $fe,$48,31,4,4,31,31,31,0,0
+Lcdout $fe,$50,16,8,4,31,1,29,28,28
+Lcdout $fe,$58,0,0,0,0,0,31,31,0
+Lcdout $fe,$60,0,0,0,0,31,31,31,0
+Lcdout $fe,$68,0,0,0,31,31,31,31,0
+Lcdout $fe,$70,0,0,31,31,31,31,31,0
+Lcdout $fe,$78,0,31,31,31,31,31,31,0
+
+symbol trigger=portb.7
+symbol echo=portb.6
+salinim var word
+mesafe var word
+trigger=0
+sonuc_cm con 6
+
+'b7=j2.3:b6=j2.4:vcc=j2.1:gdd:j1.16
+
+label:
+
+    gosub oku
+    lcdout $fe,1
+    LCDOUT 0,1,2
+    if mesafe<=5 then lcdout "_"
+    if mesafe>5 and mesafe<=10 then lcdout "_",3
+    if mesafe>10 and mesafe<=15 then lcdout "_",3,4
+    if mesafe>15 and mesafe<=20 then lcdout "_",3,4,5
+    if mesafe>20 and mesafe<=25 then lcdout "_",3,4,5,6
+    if mesafe>25 then lcdout "_",3,4,5,6,7
+    lcdout $fe,$c0,"mesafe=",#mesafe
+    pause 100
+    
+goto label
+      
+oku:
+    pulsout trigger,1 '10us lik salinim gonder
+    pulsin echo,1,salinim '10us deki salinimleri oku
+    mesafe = salinim/sonuc_cm
+    pause 10
+return

@@ -1,0 +1,48 @@
+DEFINE LOADER_USED 1
+define HSER_RCSTA 90H
+define HSER_TXSTA 24H
+define HSER_BAUD 9600
+define HSER_CLROERR 1
+TRISB=0:TRISA=%010000
+ADCON1=7
+
+x var byte
+
+label:
+
+	hserin 10,devam,[x]
+	devam:
+	select case x
+		case "w"
+			gosub sag	'w bir kez basildiginda surekli saga donsun
+		case "s"
+			gosub sol	's bir kez basildiginda surekli sola donsun
+		case "d"
+			gosub sag	'd bir kez basildiginda saga bir adim atsin basili oldugu surece saga donsun 
+			x="$"
+		case "a"
+			gosub sol
+			x="$"		'a bir kez basildiginda sola bir adim atsin basili oldugu surece sola donsun
+	end select
+
+GOTO label
+
+sol:
+	pulsout porta.2,100
+	if portb=8 then
+		portb=1
+	else
+		portb=portb<<1
+	endif
+	pause 20
+return
+
+sag:
+	pulsout porta.2,100
+	if portb=1 then
+		portb=8
+	else
+		portb=portb>>1
+	endif
+	pause 20
+return

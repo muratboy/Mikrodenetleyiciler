@@ -1,0 +1,22 @@
+DEFINE LOADER_USED 1
+
+TRISB=%00010000:TRISA=0
+ADCON1=7
+
+portb=1:porta.0=1
+
+label:
+
+    pause 100
+    portb  = portb << 1
+    if portb = 128 then goto label_2
+
+goto label
+
+label_2:
+
+    pause 100
+    portb  = portb >> 1
+    if portb = 1 then goto label
+
+goto label_2

@@ -1,0 +1,31 @@
+DEFINE LOADER_USED 1
+TRISB=0:TRISA=0
+ADCON1=7
+
+i var byte:j var byte
+
+label:
+
+	'motor sola tam tur 48*7.5=360 derece donsun
+	for i=0 to 48
+		pulsout porta.2,100
+		if portb=8 then
+			portb=1
+		else
+			portb=portb<<1
+		endif
+		pause 20
+	next i
+
+	'motor saga tam tur donsun
+	for j=0 to 48
+		pulsout porta.2,100
+		if portb=1 then
+			portb=8
+		else
+			portb=portb>>1
+		endif
+		pause 20
+	next j
+
+GOTO label

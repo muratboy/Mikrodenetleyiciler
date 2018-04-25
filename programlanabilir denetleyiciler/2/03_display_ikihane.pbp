@@ -1,0 +1,26 @@
+DEFINE LOADER_USED 1
+
+TRISA=0:TRISB=0
+ADCON1=7
+porta=0:portb=0
+
+sayi var byte [10]
+sayi[0]=%00111111:sayi[1]=%00000110
+sayi[2]=%01011011:sayi[3]=%01001111
+sayi[4]=%01100110:sayi[5]=%01101101
+sayi[6]=%01111101:sayi[7]=%00000111
+sayi[8]=%01111111:sayi[9]=%01101111
+
+i var byte:j var byte
+
+label:
+
+    for i=0 to 99
+        for j=0 to 25
+            portb=sayi[i dig 0]:porta=1:pause 10
+            portb=sayi[i dig 1]:porta=2:pause 10
+        next j
+    next i
+
+goto label
+

@@ -1,0 +1,20 @@
+DEFINE LOADER_USED 1
+
+trisb=0:TRISA=0
+ADCON1=7
+
+portb=0:porta.0=1
+
+label:
+
+    portb.7=1
+    porta.5=1
+    
+    pause 500
+    
+    portb.7=0
+    porta.5=0
+    
+    pause 500
+
+goto label

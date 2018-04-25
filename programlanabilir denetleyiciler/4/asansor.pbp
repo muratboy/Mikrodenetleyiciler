@@ -1,0 +1,99 @@
+DEFINE LOADER_USED 1
+
+TRISA=%001111:TRISB=0
+ADCON1=7
+portb=254
+porta.4=1
+porta.5=1
+
+dizi var byte[4]:dizi[0]="$":dizi[1]="$":dizi[2]="$":dizi[3]="$"
+hedef var byte:konum var byte:konum=0:hedef=0:t var byte
+i var byte: j var byte
+label:
+     if porta.0=0 then
+        hedef=0
+        if konum!=hedef then gosub hareket
+     endif
+     if porta.1=0 then
+        hedef=1
+        if konum!=hedef then gosub hareket
+     endif
+     if porta.2=0 then
+        hedef=2
+        if konum!=hedef then gosub hareket
+     endif   
+     if porta.3=0 then
+        hedef=3
+        if konum!=hedef then gosub hareket
+     endif
+     pause 5
+goto label
+     
+hareket:
+    for j=0 to 3
+     while hedef!=konum
+        if hedef>konum then
+            porta.5=1
+            porta.4=0
+            portb=~portb:portb=portb<<1:portb=~portb
+            pause 500
+            gosub kontrol
+            portb=~portb:portb=portb<<1:portb=~portb
+            konum=konum+1
+        else
+            porta.4=1
+            porta.5=0
+            portb=~portb:portb=portb>>1:portb=~portb
+            pause 500
+            gosub kontrol
+            portb=~portb:portb=portb>>1:portb=~portb
+            konum=konum-1
+        endif
+            gosub kontrol
+            pause 500    
+     wend
+       
+       if dizi[0]!="$" then
+            hedef=dizi[0]:gosub kaydir
+       endif
+           
+     next j
+     porta.4=1:porta.5=1
+return
+
+kaydir:
+    dizi[0]=dizi[1]
+    dizi[1]=dizi[2]
+    dizi[2]=dizi[3]
+    dizi[3]="$"
+return
+
+kontrol:
+     if porta.0=0 then
+        t=0
+        if t!=hedef then gosub lisvarmi   
+     endif
+     if porta.1=0 then
+        t=1
+        if t!=hedef then gosub lisvarmi
+     endif
+     if porta.2=0 then
+        t=2
+        if t!=hedef then gosub lisvarmi
+     endif   
+     if porta.3=0 then
+        t=3
+        if t!=hedef then gosub lisvarmi
+     endif
+     pause 500
+return
+
+lisvarmi:
+     for i=0 to 3
+        if dizi[i]=t then return
+        if dizi[i]="$" then
+            dizi[i]=t
+            return
+        endif 
+     next i   
+return

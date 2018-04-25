@@ -1,0 +1,41 @@
+DEFINE LOADER_USED 1
+define HSER_RCSTA 90h
+define HSER_TXSTA 24h
+define HSER_BAUD 9600
+define HSER_CLROERR 1
+
+TRISA=0:TRISB=0
+ADCON1=7
+porta=1:portb=0
+
+sayi var byte [16]
+sayi[0]=%00111111:sayi[1]=%00000110:sayi[2]=%01011011:sayi[3]=%01001111
+sayi[4]=%01100110:sayi[5]=%01101101:sayi[6]=%01111101:sayi[7]=%00000111
+sayi[8]=%01111111:sayi[9]=%01101111:sayi[10]=%01110111:sayi[11]=%01111100
+sayi[12]=%00111001:sayi[13]=%01011110:sayi[14]=%01111001:sayi[15]=%01110001
+
+x var byte:i var byte
+
+label:
+
+    hserin [x]
+
+    select case x
+        case "w"
+            if i=15 then 
+                i=0
+            else 
+                i=i+1
+            endif 
+        case "s"
+            if i=0 then
+                i=15 
+            else 
+                i=i-1
+            endif  
+    end select
+
+    portb= sayi[i]
+    pause 500
+
+goto label         
