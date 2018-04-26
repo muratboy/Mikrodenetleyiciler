@@ -58,7 +58,7 @@ islem:
     if j="-" then i=m-n
     if j="*" then i=m*n
     if j="/" then i=m/n
-    J="$"
+    j="$"
 return
 
 sifirla:

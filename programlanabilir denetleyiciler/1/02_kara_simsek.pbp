@@ -5,18 +5,18 @@ ADCON1=7
 
 portb=1:porta.0=1
 
-label:
+sol:
 
     pause 100
     portb  = portb << 1
-    if portb = 128 then goto label_2
+    if portb = 128 then goto sag
 
-goto label
+goto sol
 
-label_2:
+sag:
 
     pause 100
     portb  = portb >> 1
-    if portb = 1 then goto label
+    if portb = 1 then goto sol
 
-goto label_2
+goto sag

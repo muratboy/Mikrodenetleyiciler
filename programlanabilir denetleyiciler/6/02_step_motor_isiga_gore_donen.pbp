@@ -6,7 +6,7 @@ i var byte:j var byte
 
 label:
 
-	'isik yaniyorsa saga yanmiyorsa sola donsun (reseptor porta.4 e bagli)
+	'isik varsa saga yoksa sola donsun (reseptor porta.4 e bagli)
 	if porta.4=0 then
 		pulsout porta.2,100
 		if portb=8 then
