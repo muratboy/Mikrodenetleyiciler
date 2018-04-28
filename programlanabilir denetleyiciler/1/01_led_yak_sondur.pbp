@@ -1,19 +1,19 @@
 DEFINE LOADER_USED 1
 
-trisb=0:TRISA=0
-ADCON1=7
+trisb=0:TRISA=0		'8 b portu ve 6 a portunun hepsi cikis
+ADCON1=7			'analog olan a portlari digital olarak kullanilabilsin
 
-portb=0:porta.0=1
+portb=0:porta.0=1	'b portlarinin hepsi 0, 0. a portu 1
 
 label:
 
-    portb.7=1
-    porta.5=1
+    portb.7=1		'7. b portuna bagli led'i yak
+    porta.5=1		'5. a portuna bagli buzzerdan ses ciksin
     
-    pause 500
+    pause 500		'yarim saniye bekle
     
-    portb.7=0
-    porta.5=0
+    portb.7=0		'7. b portuna bagli led'i sondur
+    porta.5=0		'5. a portuna bagli buzzer sussun
     
     pause 500
 
