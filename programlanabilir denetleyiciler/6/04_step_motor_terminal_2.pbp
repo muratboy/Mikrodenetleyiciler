@@ -1,0 +1,87 @@
+DEFINE LOADER_USED 1
+define HSER_RCSTA 90H
+define HSER_TXSTA 24H
+define HSER_BAUD 9600
+define HSER_CLROERR 1
+TRISB=0:TRISA=%010000
+ADCON1=7
+sayi var byte [10]
+sayi[0]=%00111111:sayi[1]=%00000110
+sayi[2]=%01011011:sayi[3]=%01001111
+sayi[4]=%01100110:sayi[5]=%01101101
+sayi[6]=%01111101:sayi[7]=%00000111
+sayi[8]=%01111111:sayi[9]=%01101111
+
+i var byte:j var byte:t var byte:x var byte:x="$":p var byte:p=0
+i=0:j=0:t=0:portb=1
+label:
+
+	hserin 10,devam,[x]
+	devam:
+	select case x
+		case "d"
+			gosub sag		'd bir kez basildiginda saga bir adim atsin basili oldugu surece saga donsun
+            		gosub goster 
+			x="$"
+		case "a"
+			if p=0 then 
+				gosub no	'tur sayisi 0 ise display'de no yazsin
+			else
+				gosub sol
+				gosub goster
+			endif
+			x="$"			'a bir kez basildiginda sola bir adim atsin basili oldugu surece sola donsun
+			pause 10
+	end select
+	gosub goster
+
+GOTO label
+
+sol:
+	pulsout porta.2,100
+	if portb=8 then
+		portb=1
+	else
+		portb=portb<<1
+	endif
+	i=portb
+	pause 10
+	if t=0 then
+        	if p>0 then
+            		p=p-1:t=47
+        	endif
+    	else
+        	t=t-1
+    	endif
+return
+
+sag:
+	pulsout porta.2,100
+	if portb=1 then
+		portb=8
+	else
+		portb=portb>>1
+	endif
+	i=portb
+	pause 10
+	if t= 47 then
+        	p=p+1:t=0
+	else
+        	t=t+1
+	endif
+return
+
+goster: 
+        porta=2:portb=sayi[p dig 0]:pause 10
+        porta=1:portb=sayi[p dig 1]:pause 10
+	porta=0:portb=i
+return
+
+no:
+    for j=0 to 10
+       porta=1:portb=%00110111:pause 10
+       porta=2:porta=2:portb=%00111111:pause 10
+    next j
+    porta=0:portb=i
+return   
+

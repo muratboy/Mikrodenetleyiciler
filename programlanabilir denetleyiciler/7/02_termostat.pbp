@@ -1,0 +1,45 @@
+DEFINE LOADER_USED 1
+TRISA=%001100
+ADCON1=7
+
+sayi var byte [10]
+sayi[0]=%00111111:sayi[1]=%00000110
+sayi[2]=%01011011:sayi[3]=%01001111
+sayi[4]=%01100110:sayi[5]=%01101101
+sayi[6]=%01111101:sayi[7]=%00000111
+sayi[8]=%01111111:sayi[9]=%01101111
+
+c var byte:i var byte:term var byte:term=20
+
+label:
+    porta.0=0
+    TRISB=255
+    c=portb
+    porta.0=1
+    TRISB=0
+    if c>=term then
+        porta.4=0
+    else
+        porta.4=1
+    endif
+    if porta.3=0 then gosub artir
+    if porta.2=0 then c=term
+    gosub goster
+    pause 50
+    
+goto label
+
+goster:
+    for i=0 to 8
+        portb=sayi[c dig 0]:porta.1=1:pause 10
+        portb=sayi[c dig 1]:porta.1=0:pause 10
+    next i
+return
+
+artir:
+    term= term+1
+    c=term
+    pause 50
+
+return
+
