@@ -1,0 +1,37 @@
+DEFINE LOADER_USED 1
+DEFINE LCD_DREG PORTD
+DEFINE LCD_DBIT 0
+DEFINE LCD_RSREG PORTE
+DEFINE LCD_RSBIT 0
+DEFINE LCD_EREG PORTE
+DEFINE LCD_EBIT 2
+DEFINE LCD_BITS 8
+TRISD=0:TRISE=%000:TRISB=0:TRISA=%001100
+PortE.1=0
+ADCON1=7
+PAUSE 100
+
+Lcdout $fe,$40,2,5,2,0,0,0,0,0
+Lcdout $fe,$48,4,10,17,17,10,14,14,0
+
+c var byte:i var byte:term var byte:term=20
+
+label:
+    porta.0=0
+    TRISB=255
+    c=portb
+    porta.0=1
+    TRISB=0
+    if c>=term then
+        lcdout $fe,1,"Tmetre: ", #c,0,"C"
+    else
+        lcdout $fe,1,"Tmetre: ", #c,0,"C  ",1
+    endif
+    lcdout $fe,$c0,"Tmostat: ",#term,0,"C"
+    if porta.3=0 then term= term+1
+    if porta.2=0 then term= term-1
+    pause 100
+goto label
+
+
+
