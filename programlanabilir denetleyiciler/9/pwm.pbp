@@ -1,0 +1,53 @@
+DEFINE LOADER_USED 1
+define HSER_RCSTA 90H
+define HSER_TXSTA 24H
+define HSER_BAUD 9600
+define HSER_CLROERR 1
+TRISA=0:TRISB=255:TRISC=%10000011
+ADCON1=7
+i var word:x var byte
+symbol sw1=portc.0
+symbol sw2=portc.1
+
+label1: 'hoparlore pwm gonderme, anahtar yardimiyla
+    i=~portb
+    pulsout portc.2,i
+goto label1
+
+label2: 'led'in isigini pwm ile kisma, anahtar yardimiyla
+    i=~portb
+    pulsout porta.3,i
+goto label2
+
+label3: 'sw1 anahtari ile role kontrol motor ileri surme
+    if sw1=0 then
+        porta.0=1
+    else
+        porta.0=0
+    endif
+goto label3
+
+deneme:    'klavyeyle calma
+    hserin 10,devam,[x]
+    devam:
+    select case x
+        case "a"
+           i=82  'do
+        case "s"
+           i=87  're
+        case "d"
+           i=92  'mi
+        case "f"
+           i=94  'fa
+        case "g"
+           i=97  'sol
+        case "h"
+           i=101 'la
+        case "j"
+           i=104 'si
+        case "k"
+           i=105 'do
+    end select
+    if i>80 then sound portc.2,[i,10]
+    i=0:x="$"
+goto deneme
